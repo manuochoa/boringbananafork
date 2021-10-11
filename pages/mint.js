@@ -21,10 +21,13 @@ export default function Mint() {
 
   const [saleStarted, setSaleStarted] = useState(false);
 
+  const [whitelistStarted, setWhitelistStarted] = useState(false);
+
   const [bananaPrice, setBananaPrice] = useState(0);
 
   useEffect(async () => {
     signIn();
+    callContractData();
   }, []);
 
   async function signIn() {
@@ -69,20 +72,27 @@ export default function Mint() {
   }
 
   async function callContractData(wallet) {
-    // let balance = await web3.eth.getBalance(wallet);
-    // setWalletBalance(balance)
-    const bananaContract = new window.web3.eth.Contract(ABI, ADDRESS);
-    setBananaContract(bananaContract);
+    if (walletAddress) {
+      // let balance = await web3.eth.getBalance(wallet);
+      // setWalletBalance(balance)
+      const bananaContract = new window.web3.eth.Contract(ABI, ADDRESS);
 
-    const salebool = await bananaContract.methods.publicSale().call();
-    console.log("saleisActive", salebool);
-    setSaleStarted(salebool);
+      setBananaContract(bananaContract);
 
-    const totalSupply = await bananaContract.methods.totalSupply().call();
-    setTotalSupply(totalSupply);
+      const salebool = await bananaContract.methods.publicSale().call();
+      console.log("saleisActive", salebool);
+      setSaleStarted(salebool);
 
-    const bananaPrice = await bananaContract.methods.price().call();
-    setBananaPrice(bananaPrice);
+      const whitesalebool = await bananaContract.methods.onlyWhitelist().call();
+      console.log("saleisActive", whitesalebool);
+      setWhitelistStarted(whitesalebool);
+
+      const totalSupply = await bananaContract.methods.totalSupply().call();
+      setTotalSupply(totalSupply);
+
+      const bananaPrice = await bananaContract.methods.price().call();
+      setBananaPrice(bananaPrice);
+    }
   }
 
   async function mintBanana(how_many_bananas) {
@@ -98,6 +108,28 @@ export default function Mint() {
 
       bananaContract.methods
         .buy(how_many_bananas)
+        .send({ from: walletAddress, value: price, gas: String(gasAmount) })
+        .on("transactionHash", function (hash) {
+          console.log("transactionHash", hash);
+        });
+    } else {
+      console.log("Wallet not connected");
+    }
+  }
+
+  async function whiteMintBanana(how_many_bananas) {
+    if (bananaContract) {
+      const price = Number(bananaPrice) * how_many_bananas;
+
+      const gasAmount = await bananaContract.methods
+        .whiteListBuy(how_many_bananas)
+        .estimateGas({ from: walletAddress, value: price });
+      console.log("estimated gas", gasAmount);
+
+      console.log({ from: walletAddress, value: price });
+
+      bananaContract.methods
+        .whiteListBuy(how_many_bananas)
         .send({ from: walletAddress, value: price, gas: String(gasAmount) })
         .on("transactionHash", function (hash) {
           console.log("transactionHash", hash);
@@ -286,6 +318,19 @@ bananas out known to man."
             ) : (
               <button className="mt-4 Poppitandfinchsans text-4xl border-6 bg-blau  text-white hover:text-black p-2 ">
                 SALE IS NOT ACTIVE OR NO WALLET IS CONNECTED
+              </button>
+            )}
+            {whitelistStarted ? (
+              <button
+                onClick={() => whiteMintBanana(how_many_bananas)}
+                className="mt-4 Poppitandfinchsans text-4xl border-6 bg-blau  text-white hover:text-black p-2 "
+              >
+                WHITELIST MINT {how_many_bananas} bananas for{" "}
+                {(bananaPrice * how_many_bananas) / 10 ** 18} ETH + GAS
+              </button>
+            ) : (
+              <button className="mt-4 Poppitandfinchsans text-4xl border-6 bg-blau  text-white hover:text-black p-2 ">
+                WHITELIST SALE IS NOT ACTIVE OR NO WALLET IS CONNECTED
               </button>
             )}
           </div>
