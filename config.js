@@ -1,7 +1,7 @@
 // GET YOUR INFURA API ENDPOINT FROM https://infura.io/
 export const INFURA_ADDRESS = "";
 
-export const ADDRESS = "0xa7d1d2E5136d8931FD6c8C28821868af7A7127Fd";
+export const ADDRESS = "0xcDeB2B508377FcE7b9c810a1B82A3D02AD156C8d";
 
 export const ABI = [
   {
