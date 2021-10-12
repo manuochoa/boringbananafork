@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import { ADDRESS, ABI } from "../config.js";
 
-export default function Mint() {
+export default function WhiteMint() {
   // FOR WALLET
   const [signedIn, setSignedIn] = useState(false);
 
@@ -293,7 +293,7 @@ bananas out known to man."
         <div className="mt-6 border-b-2 py-6">
           <div className="flex flex-col items-center">
             <span className="flex Poppitandfinchsans text-5xl text-white items-center bg-grey-lighter rounded rounded-r-none my-4 ">
-              PUBLIC MINT
+              WHITELIST MINT
               <br />
               TOTAL BANANAS MINTED:{" "}
               <span className="text-blau text-6xl">
@@ -301,7 +301,6 @@ bananas out known to man."
                 {!signedIn ? <>-</> : <>{totalSupply}</>} / 10000
               </span>
             </span>
-
             <div id="mint" className="flex justify-around  mt-8 mx-6">
               <span className="flex Poppitandfinchsans text-5xl text-white items-center bg-grey-lighter rounded rounded-r-none px-3 font-bold">
                 GIMME
@@ -321,17 +320,17 @@ bananas out known to man."
                 BANANAS!
               </span>
             </div>
-            {saleStarted ? (
+            {whitelistStarted ? (
               <button
-                onClick={() => mintBanana(how_many_bananas)}
+                onClick={() => whiteMintBanana(how_many_bananas)}
                 className="mt-4 Poppitandfinchsans text-4xl border-6 bg-blau  text-white hover:text-black p-2 "
               >
-                MINT {how_many_bananas} bananas for{" "}
+                WHITELIST MINT {how_many_bananas} bananas for{" "}
                 {(bananaPrice * how_many_bananas) / 10 ** 18} ETH + GAS
               </button>
             ) : (
               <button className="mt-4 Poppitandfinchsans text-4xl border-6 bg-blau  text-white hover:text-black p-2 ">
-                SALE IS NOT ACTIVE OR NO WALLET IS CONNECTED
+                WHITELIST SALE IS NOT ACTIVE OR NO WALLET IS CONNECTED
               </button>
             )}
           </div>
