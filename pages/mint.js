@@ -72,27 +72,33 @@ export default function Mint() {
   }
 
   async function callContractData(wallet) {
-    if (walletAddress) {
-      // let balance = await web3.eth.getBalance(wallet);
-      // setWalletBalance(balance)
-      const bananaContract = new window.web3.eth.Contract(ABI, ADDRESS);
-
-      setBananaContract(bananaContract);
-
-      const salebool = await bananaContract.methods.publicSale().call();
-      console.log("saleisActive", salebool);
-      setSaleStarted(salebool);
-
-      const whitesalebool = await bananaContract.methods.onlyWhitelist().call();
-      console.log("saleisActive", whitesalebool);
-      setWhitelistStarted(whitesalebool);
-
-      const totalSupply = await bananaContract.methods.totalSupply().call();
-      setTotalSupply(totalSupply);
-
-      const bananaPrice = await bananaContract.methods.price().call();
-      setBananaPrice(bananaPrice);
+    let web3;
+    if (typeof window.web3 !== "undefined") {
+      // Use existing gateway
+      web3 = new Web3(window.ethereum);
+    } else {
+      web3 = new Web3(
+        "https://rinkeby.infura.io/v3/a8ed213665484d9eba057b5ee327f8e0"
+      );
     }
+
+    const bananaContract = new web3.eth.Contract(ABI, ADDRESS);
+
+    setBananaContract(bananaContract);
+
+    const salebool = await bananaContract.methods.publicSale().call();
+    console.log("saleisActive", salebool);
+    setSaleStarted(salebool);
+
+    const whitesalebool = await bananaContract.methods.onlyWhitelist().call();
+    console.log("saleisActive", whitesalebool);
+    setWhitelistStarted(whitesalebool);
+
+    const totalSupply = await bananaContract.methods.totalSupply().call();
+    setTotalSupply(totalSupply);
+
+    const bananaPrice = await bananaContract.methods.price().call();
+    setBananaPrice(bananaPrice);
   }
 
   async function mintBanana(how_many_bananas) {
