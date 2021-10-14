@@ -1,7 +1,7 @@
 // GET YOUR INFURA API ENDPOINT FROM https://infura.io/
 export const INFURA_ADDRESS = "";
 
-export const ADDRESS = "0xcDeB2B508377FcE7b9c810a1B82A3D02AD156C8d";
+export const ADDRESS = "0x847Bfefc478912aBf3AB060ec8556F7ddccBd45A";
 
 export const ABI = [
   {
@@ -104,6 +104,25 @@ export const ABI = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "traitId",
+        type: "uint256",
+      },
+    ],
+    name: "traitChoosed",
+    type: "event",
+  },
+  {
     inputs: [
       {
         internalType: "address[]",
@@ -186,6 +205,11 @@ export const ABI = [
         name: "_amount",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "_trait",
+        type: "uint256",
+      },
     ],
     name: "buy",
     outputs: [],
@@ -230,6 +254,11 @@ export const ABI = [
         internalType: "address[]",
         name: "receivers",
         type: "address[]",
+      },
+      {
+        internalType: "uint256",
+        name: "_trait",
+        type: "uint256",
       },
     ],
     name: "giftNFTs",
@@ -733,6 +762,11 @@ export const ABI = [
       {
         internalType: "uint256",
         name: "_amount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_trait",
         type: "uint256",
       },
     ],

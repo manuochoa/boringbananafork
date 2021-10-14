@@ -13,6 +13,8 @@ export default function Mint() {
   // FOR MINTING
   const [how_many_bananas, set_how_many_bananas] = useState(1);
 
+  const [trait, setTrait] = useState(1);
+
   const [bananaContract, setBananaContract] = useState(null);
 
   // INFO FROM SMART Contract
@@ -106,14 +108,14 @@ export default function Mint() {
       const price = Number(bananaPrice) * how_many_bananas;
 
       const gasAmount = await bananaContract.methods
-        .buy(how_many_bananas)
+        .buy(how_many_bananas, trait)
         .estimateGas({ from: walletAddress, value: price });
       console.log("estimated gas", gasAmount);
-
+      console.log(how_many_bananas, trait);
       console.log({ from: walletAddress, value: price });
 
       bananaContract.methods
-        .buy(how_many_bananas)
+        .buy(how_many_bananas, trait)
         .send({ from: walletAddress, value: price, gas: String(gasAmount) })
         .on("transactionHash", function (hash) {
           console.log("transactionHash", hash);
@@ -128,14 +130,14 @@ export default function Mint() {
       const price = Number(bananaPrice) * how_many_bananas;
 
       const gasAmount = await bananaContract.methods
-        .whiteListBuy(how_many_bananas)
+        .whiteListBuy(how_many_bananas, trait)
         .estimateGas({ from: walletAddress, value: price });
       console.log("estimated gas", gasAmount);
 
       console.log({ from: walletAddress, value: price });
 
       bananaContract.methods
-        .whiteListBuy(how_many_bananas)
+        .whiteListBuy(how_many_bananas, trait)
         .send({ from: walletAddress, value: price, gas: String(gasAmount) })
         .on("transactionHash", function (hash) {
           console.log("transactionHash", hash);
@@ -320,6 +322,43 @@ bananas out known to man."
               <span className="flex Poppitandfinchsans text-5xl text-white items-center bg-grey-lighter rounded rounded-r-none px-3 font-bold">
                 BANANAS!
               </span>
+              <br />
+            </div>
+            <div id="mint" className="flex justify-around  mt-8 mx-6">
+              <span className="flex Poppitandfinchsans text-5xl text-white items-center bg-grey-lighter rounded rounded-r-none px-3 font-bold">
+                <label for="trait">Choose a trait:</label>
+              </span>
+              <select
+                name="trait"
+                id="trait"
+                onChange={(e) => setTrait(e.target.value)}
+                className="Poppitandfinchsans pl-4 text-4xl  inline bg-grey-lighter  py-2 font-normal rounded text-grey-darkest  font-bold"
+              >
+                <option
+                  className="Poppitandfinchsans pl-4 text-4xl  inline bg-grey-lighter  py-2 font-normal rounded text-grey-darkest  font-bold"
+                  value="0"
+                >
+                  trait 0
+                </option>
+                <option
+                  className="Poppitandfinchsans pl-4 text-4xl  inline bg-grey-lighter  py-2 font-normal rounded text-grey-darkest  font-bold"
+                  value="1"
+                >
+                  trait 1
+                </option>
+                <option
+                  className="Poppitandfinchsans pl-4 text-4xl  inline bg-grey-lighter  py-2 font-normal rounded text-grey-darkest  font-bold"
+                  value="2"
+                >
+                  trait 2
+                </option>
+                <option
+                  className="Poppitandfinchsans pl-4 text-4xl  inline bg-grey-lighter  py-2 font-normal rounded text-grey-darkest  font-bold"
+                  value="3"
+                >
+                  trait 3
+                </option>
+              </select>
             </div>
             {saleStarted ? (
               <button
