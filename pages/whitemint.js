@@ -125,24 +125,32 @@ export default function WhiteMint() {
     }
   }
 
-  async function whiteMintBanana(how_many_bananas) {
+ async function whiteMintBanana(how_many_bananas) {
     if (bananaContract) {
       const price = Number(bananaPrice) * how_many_bananas;
 
-      const gasAmount = await bananaContract.methods
-        .whiteListBuy(how_many_bananas, trait)
-        .estimateGas({ from: walletAddress, value: price });
-      console.log("estimated gas", gasAmount);
-      console.log(how_many_bananas, trait);
+      const isOnWhitelist = await bananaContract.methods
+        .isWhitelisted(walletAddress)
+        .call();
+      console.log(isOnWhitelist);
+      if (isOnWhitelist) {
+        const gasAmount = await bananaContract.methods
+          .whiteListBuy(how_many_bananas, trait)
+          .estimateGas({ from: walletAddress, value: price });
+        console.log("estimated gas", gasAmount);
+        console.log(how_many_bananas, trait);
 
-      console.log({ from: walletAddress, value: price });
+        console.log({ from: walletAddress, value: price });
 
-      bananaContract.methods
-        .whiteListBuy(how_many_bananas, trait)
-        .send({ from: walletAddress, value: price, gas: String(gasAmount) })
-        .on("transactionHash", function (hash) {
-          console.log("transactionHash", hash);
-        });
+        bananaContract.methods
+          .whiteListBuy(how_many_bananas, trait)
+          .send({ from: walletAddress, value: price, gas: String(gasAmount) })
+          .on("transactionHash", function (hash) {
+            console.log("transactionHash", hash);
+          });
+      } else {
+        window.alert("you're not on the whitelist");
+      }
     } else {
       console.log("Wallet not connected");
     }
